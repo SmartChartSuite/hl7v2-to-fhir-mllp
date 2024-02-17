@@ -1,0 +1,390 @@
+{
+  "resourceType": "Bundle",
+  "id": "7b750cb2-f6a1-4dad-932c-c82c3770b5ac",
+  "type": "document",
+  "timestamp": "2024-02-16T20:27:49.030-05:00",
+  "entry": [ {
+    "fullUrl": "urn:uuid:cf2d9c59-367e-486e-8d21-4173e3ab5066",
+    "resource": {
+      "resourceType": "Composition",
+      "id": "cf2d9c59-367e-486e-8d21-4173e3ab5066",
+      "status": "final",
+      "type": {
+        "extension": [ {
+          "url": "ext-messageProfile",
+          "extension": [ {
+            "url": "urn:mmg:entityIdentifier",
+            "valueString": "USELR1.0"
+          }, {
+            "url": "urn:mmg:universalID",
+            "valueString": "2.16.840.1.113883.19.9.7"
+          }, {
+            "url": "urn:mmg:universalIDType",
+            "valueString": "ISO"
+          } ]
+        } ],
+        "coding": [ {
+          "system": "http://loinc.org",
+          "code": "11502-2",
+          "display": "Laboratory report"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      },
+      "section": [ {
+        "entry": [ {
+          "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+        }, {
+          "reference": "urn:uuid:5ea18ef3-fac6-4529-a7ad-0ec497bbf65d"
+        }, {
+          "reference": "urn:uuid:3b65e7ac-e58b-4a50-a5de-0371d948d724"
+        }, {
+          "reference": "urn:uuid:25b4dfb1-8be0-486b-9e84-2b0fc181f456"
+        }, {
+          "reference": "urn:uuid:b7d5b019-91cb-42b1-9332-b0945550822f"
+        }, {
+          "reference": "urn:uuid:1aa3fb18-a53c-418b-ac5f-35f9ac4d5d66"
+        }, {
+          "reference": "urn:uuid:f3897652-dea7-4da5-9e56-e235d4a31e61"
+        } ]
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f",
+    "resource": {
+      "resourceType": "Patient",
+      "id": "f5054a19-3102-4f4d-8b83-2c093321e89f",
+      "extension": [ {
+        "url": "urn:mmg:cdc-race",
+        "extension": [ {
+          "url": "mmgCategory",
+          "valueCoding": {
+            "system": "CDCREC",
+            "code": "2106-3",
+            "display": "White"
+          }
+        }, {
+          "url": "text",
+          "valueString": "White"
+        } ]
+      }, {
+        "url": "urn:mmg:cdc-ethnicity",
+        "extension": [ {
+          "url": "mmgCategory",
+          "valueCoding": {
+            "system": "HL70189",
+            "code": "N",
+            "display": "Not Hispanic or Latino"
+          }
+        }, {
+          "url": "text",
+          "valueString": "Not Hispanic or Latino"
+        } ]
+      } ],
+      "identifier": [ {
+        "type": {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "MR"
+          } ]
+        },
+        "value": "36363636"
+      }, {
+        "type": {
+          "coding": [ {
+            "system": "http://hl7.org/fhir/v2/0203",
+            "code": "SS"
+          } ]
+        },
+        "value": "777333333"
+      } ],
+      "name": [ {
+        "family": "Darth",
+        "given": [ "Vader" ]
+      } ],
+      "gender": "male",
+      "birthDate": "1975-06-02",
+      "address": [ {
+        "use": "home",
+        "line": [ "2222 Home Street" ],
+        "city": "Ann Arbor",
+        "state": "MI",
+        "postalCode": "99999",
+        "country": "USA"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:5ea18ef3-fac6-4529-a7ad-0ec497bbf65d",
+    "resource": {
+      "resourceType": "DiagnosticReport",
+      "id": "5ea18ef3-fac6-4529-a7ad-0ec497bbf65d",
+      "identifier": [ {
+        "type": {
+          "coding": [ {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+            "code": "PLAC"
+          } ]
+        },
+        "value": "1205001883"
+      }, {
+        "extension": [ {
+          "url": "ext-assigningauthority",
+          "extension": [ {
+            "url": "urn:mmg:nameSpaceID",
+            "valueString": "LAB"
+          } ]
+        } ],
+        "type": {
+          "coding": [ {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0203",
+            "code": "FILL"
+          } ]
+        },
+        "value": "12001805860"
+      } ],
+      "basedOn": [ {
+        "reference": "urn:uuid:3b65e7ac-e58b-4a50-a5de-0371d948d724"
+      }, {
+        "reference": "urn:uuid:b7d5b019-91cb-42b1-9332-b0945550822f"
+      } ],
+      "code": {
+        "coding": [ {
+          "system": "urn:local:general-code",
+          "code": "164200",
+          "display": "C. trachomatis - PCA"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      },
+      "result": [ {
+        "reference": "urn:uuid:25b4dfb1-8be0-486b-9e84-2b0fc181f456"
+      }, {
+        "reference": "urn:uuid:1aa3fb18-a53c-418b-ac5f-35f9ac4d5d66"
+      }, {
+        "reference": "urn:uuid:f3897652-dea7-4da5-9e56-e235d4a31e61"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:3b65e7ac-e58b-4a50-a5de-0371d948d724",
+    "resource": {
+      "resourceType": "ServiceRequest",
+      "id": "3b65e7ac-e58b-4a50-a5de-0371d948d724",
+      "status": "completed",
+      "intent": "order",
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:25b4dfb1-8be0-486b-9e84-2b0fc181f456",
+    "resource": {
+      "resourceType": "Observation",
+      "id": "25b4dfb1-8be0-486b-9e84-2b0fc181f456",
+      "category": [ {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory"
+        } ]
+      } ],
+      "code": {
+        "coding": [ {
+          "system": "urn:local:general-code",
+          "code": "164200",
+          "display": "C. trachomatis - PCA"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      },
+      "valueString": "Positive",
+      "interpretation": [ {
+        "coding": [ {
+          "system": "urn:oid:2.16.840.1.113883.12.78",
+          "code": "A"
+        } ]
+      } ],
+      "note": [ {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "Performed At: DA"
+      }, {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "LabCorp Dallas"
+      }, {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "7777 Forest Lane Suite 350C"
+      }, {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "Dallas, TX 752300000"
+      } ],
+      "referenceRange": [ {
+        "text": "Negative"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:b7d5b019-91cb-42b1-9332-b0945550822f",
+    "resource": {
+      "resourceType": "ServiceRequest",
+      "id": "b7d5b019-91cb-42b1-9332-b0945550822f",
+      "status": "completed",
+      "intent": "order",
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      }
+    }
+  }, {
+    "fullUrl": "urn:uuid:1aa3fb18-a53c-418b-ac5f-35f9ac4d5d66",
+    "resource": {
+      "resourceType": "Observation",
+      "id": "1aa3fb18-a53c-418b-ac5f-35f9ac4d5d66",
+      "category": [ {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory"
+        } ]
+      } ],
+      "code": {
+        "coding": [ {
+          "system": "urn:local:general-code",
+          "code": "164205",
+          "display": "N gonorrhoeae Competition Rflx"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      },
+      "valueString": "Negative",
+      "referenceRange": [ {
+        "text": "Negative"
+      } ]
+    }
+  }, {
+    "fullUrl": "urn:uuid:f3897652-dea7-4da5-9e56-e235d4a31e61",
+    "resource": {
+      "resourceType": "Observation",
+      "id": "f3897652-dea7-4da5-9e56-e235d4a31e61",
+      "category": [ {
+        "coding": [ {
+          "system": "http://hl7.org/fhir/observation-category",
+          "code": "laboratory"
+        } ]
+      } ],
+      "code": {
+        "coding": [ {
+          "system": "urn:local:general-code",
+          "code": "164212",
+          "display": "N gonorrhoeae DNA Probe w/Rflx"
+        } ]
+      },
+      "subject": {
+        "reference": "urn:uuid:f5054a19-3102-4f4d-8b83-2c093321e89f"
+      },
+      "valueString": "See Reflex",
+      "note": [ {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "Performed At: DA"
+      }, {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "LabCorp Dallas"
+      }, {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "7777 Forest Lane Suite 350C"
+      }, {
+        "extension": [ {
+          "url": "ext-sourceOfComment",
+          "valueCoding": {
+            "system": "http://terminology.hl7.org/CodeSystem/v2-0105",
+            "code": "L"
+          }
+        }, {
+          "url": "ext-noteType",
+          "valueCoding": {
+            "code": "CR"
+          }
+        } ],
+        "text": "Dallas, TX 752300000"
+      } ],
+      "referenceRange": [ {
+        "text": "Negative"
+      } ]
+    }
+  } ]
+}
