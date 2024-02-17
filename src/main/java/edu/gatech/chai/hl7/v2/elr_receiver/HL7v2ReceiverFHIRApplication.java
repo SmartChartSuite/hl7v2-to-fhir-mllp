@@ -132,7 +132,6 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		try {
 			if (filename != null && !filename.isEmpty()) {
 				String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(resource);
-				System.out.println(fhirJson);
 
 				BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 				writer.write(fhirJson);
@@ -149,7 +148,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 	public Message processMessage(Message theMessage, Map<String, Object> theMetadata)
 			throws ReceivingApplicationException, HL7Exception {
 
-		System.out.println("Received message:\n" + theMessage.encode());
+		LOGGER.debug("Received message:\n" + theMessage.encode());
 		
 		List<IBaseBundle> bundles = getMyParser().executeParser(theMessage);
 		IGenericClient client = null;

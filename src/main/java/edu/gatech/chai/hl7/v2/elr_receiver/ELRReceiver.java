@@ -43,7 +43,6 @@ public class ELRReceiver {
 	static boolean default_useTls = false;
 	static String default_useTls_str = "False";
 	static String default_qFileName = "queueELR";
-	static String default_ecrTemplateFileName = "ECR.json";
 	static String default_transport = "MLLP";
 	static String default_hl7HttpBasic = "user:password";
 	static String default_saveToFile = "trigger_parameter";
@@ -97,7 +96,6 @@ public class ELRReceiver {
 				prop.setProperty("fhirControllerUrl", default_fhir_controller_api_url);
 				prop.setProperty("useTls", default_useTls_str);
 				prop.setProperty("qFileName", default_qFileName);
-				prop.setProperty("ecrFileName", default_ecrTemplateFileName);
 				prop.setProperty("transport", default_transport);
 				prop.setProperty("hl7HttpBasic", default_hl7HttpBasic);
 				prop.setProperty("saveToFile", default_saveToFile);
