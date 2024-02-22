@@ -127,7 +127,7 @@ public abstract class HL7v2ReceiverApplication<v extends BaseHL7v2FHIRParser>
 			byte[] data = queueFile.peek();
 			queueFile.remove();
 			jsonString = new String(data, StandardCharsets.UTF_8);
-			System.out.println("JSON object from queue(" + queueFile.size() + "):" + jsonString);
+			// System.out.println("JSON object from queue(" + queueFile.size() + "):" + jsonString);
 			
 			sendData(jsonString);
 		} catch (JSONException e) {
