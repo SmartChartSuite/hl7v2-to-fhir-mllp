@@ -258,19 +258,19 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		if ("YES".equals(getSaveToFile())) {					
 			String filename = getFilePath() + "/" + fileUnique + "_bundle.txt";
 			saveJsonToFile(parameters, filename);
-		} else {
-			try {
-				client.operation()
-					.onServer()
-					.named("$registry-control")
-					.withParameters(parameters)
-					.execute();
-			} catch (Exception e) {
-				String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(myBundle);
-				getQueueFile().add(fhirJson.getBytes());
-				
-				throw new ReceivingApplicationException(e);
-			}
+		}
+
+		try {
+			client.operation()
+				.onServer()
+				.named("$registry-control")
+				.withParameters(parameters)
+				.execute();
+		} catch (Exception e) {
+			String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(myBundle);
+			getQueueFile().add(fhirJson.getBytes());
+			
+			throw new ReceivingApplicationException(e);
 		}
 	}
 
