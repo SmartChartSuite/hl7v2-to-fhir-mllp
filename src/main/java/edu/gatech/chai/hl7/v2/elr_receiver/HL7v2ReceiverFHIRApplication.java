@@ -11,6 +11,8 @@ import org.hl7.fhir.instance.model.api.IBaseResource;
 import org.hl7.fhir.r4.model.Bundle;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.MessageHeader;
+import org.hl7.fhir.r4.model.OperationOutcome;
+import org.hl7.fhir.r4.model.OperationOutcome.OperationOutcomeIssueComponent;
 import org.hl7.fhir.r4.model.Parameters;
 import org.hl7.fhir.r4.model.Parameters.ParametersParameterComponent;
 import org.hl7.fhir.r4.model.Patient;
@@ -30,6 +32,7 @@ import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
+import ca.uhn.fhir.rest.server.exceptions.UnprocessableEntityException;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.protocol.ReceivingApplicationException;
@@ -252,20 +255,38 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 
 		parameters.setParameter("set-status", "REQUEST");
 		ParametersParameterComponent param = parameters.addParameter();
+		// param.setName("lab-results");
 		param.setResource(myBundle);
 		
 		String fileUnique = String.valueOf(System.currentTimeMillis());
 		if ("YES".equals(getSaveToFile())) {					
 			String filename = getFilePath() + "/" + fileUnique + "_bundle.txt";
 			saveJsonToFile(parameters, filename);
-		}
-
+		} 
+	
+		Parameters retParams;
 		try {
-			client.operation()
+			retParams = client.operation()
 				.onServer()
 				.named("$registry-control")
 				.withParameters(parameters)
 				.execute();
+		} catch (UnprocessableEntityException e) {
+			String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(myBundle);
+			getQueueFile().add(fhirJson.getBytes());
+			
+			OperationOutcome oo = (OperationOutcome) e.getOperationOutcome();
+			String ooIssueText = "";
+			for (OperationOutcomeIssueComponent issue : oo.getIssue()) {
+				ooIssueText += issue.getDetails().getText();
+			}
+
+			ooIssueText = ooIssueText.trim();
+			if (ooIssueText.isBlank()) {
+				throw new ReceivingApplicationException(e);
+			} else {
+				throw new ReceivingApplicationException(ooIssueText);
+			}
 		} catch (Exception e) {
 			String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(myBundle);
 			getQueueFile().add(fhirJson.getBytes());
