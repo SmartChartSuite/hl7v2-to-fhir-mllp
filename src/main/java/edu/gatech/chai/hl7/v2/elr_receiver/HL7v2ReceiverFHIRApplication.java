@@ -255,11 +255,11 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 
 		parameters.setParameter("set-status", "REQUEST");
 		ParametersParameterComponent param = parameters.addParameter();
-		// param.setName("lab-results");
+		param.setName("lab-results");
 		param.setResource(myBundle);
 		
 		String fileUnique = String.valueOf(System.currentTimeMillis());
-		if ("YES".equals(getSaveToFile())) {					
+		if ("YES".equalsIgnoreCase(getSaveToFile())) {					
 			String filename = getFilePath() + "/" + fileUnique + "_bundle.txt";
 			saveJsonToFile(parameters, filename);
 		} 

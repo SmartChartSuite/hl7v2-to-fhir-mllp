@@ -137,6 +137,7 @@ public abstract class HL7v2ReceiverApplication<v extends BaseHL7v2FHIRParser>
 			e.printStackTrace();
 		} catch (Exception e) {
 			success = false;
+			LOGGER.error("Failed to send from Queue: " + e.getMessage() + "\nJSON data:" + jsonString);
 			e.printStackTrace();
 		}
 

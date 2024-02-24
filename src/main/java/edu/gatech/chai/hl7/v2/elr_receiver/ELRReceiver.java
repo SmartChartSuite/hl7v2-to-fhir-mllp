@@ -45,7 +45,7 @@ public class ELRReceiver {
 	static String default_qFileName = "queueELR";
 	static String default_transport = "MLLP";
 	static String default_hl7HttpBasic = "user:password";
-	static String default_saveToFile = "trigger_parameter";
+	static String default_saveToFile = "NO";
 	static String default_authBasic = "client:secret";
 	static String default_authBearer = "1234";
 	static String default_filePath = "./";
@@ -66,6 +66,26 @@ public class ELRReceiver {
 		String authBearer = default_authBearer;
 		String filePath = default_filePath;
 	
+		String env_fhir_controller_api_url = System.getenv("FHIR_CONTROLLER_API_URL");
+		if (env_fhir_controller_api_url != null && !env_fhir_controller_api_url.isBlank()) {
+			default_fhir_controller_api_url = env_fhir_controller_api_url;
+		}
+
+		String env_saveToFile = System.getenv("SAVE_TO_FILE");
+		if (env_saveToFile != null && !env_saveToFile.isBlank()) {
+			default_saveToFile = env_saveToFile;
+		}
+
+		String env_authBasic = System.getenv("AUTH_BASIC");
+		if (env_authBasic != null && !env_authBasic.isBlank()) {
+			default_authBasic = env_authBasic;
+		}
+
+		String env_authBearer = System.getenv("AUTH_BEARER");
+		if (env_authBearer != null && !env_authBearer.isBlank()) {
+			default_authBearer = env_authBearer;
+		}
+
 		boolean writeConfig = false;
 		try {
 			input = new FileInputStream("config.properties");
