@@ -5,7 +5,7 @@
 
 	<groupId>edu.gatech.i3l.hl7.v2</groupId>
 	<artifactId>elr_receiver</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 	<packaging>jar</packaging>
 
 	<name>elr_receiver</name>
@@ -13,8 +13,8 @@
 
 	<properties>
 		<hapi_v2_stable_version>2.5.1</hapi_v2_stable_version>
-		<hapi_fhir_stable_version>6.8.2</hapi_fhir_stable_version>
-		<hl7v2_to_fhir_version>1.1.0</hl7v2_to_fhir_version>
+		<hapi_fhir_stable_version>7.0.0</hapi_fhir_stable_version>
+		<hl7v2_to_fhir_version>1.1.1</hl7v2_to_fhir_version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
@@ -81,7 +81,7 @@
 		<dependency>
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
-			<version>20170516</version>
+			<version>20240205</version>
 		</dependency>
 <!-- 
 		<dependency>

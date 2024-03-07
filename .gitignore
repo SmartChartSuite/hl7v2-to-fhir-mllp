@@ -147,3 +147,7 @@ local.properties
 
 queueELR
 
+
+.fake
+
+.vscode/

@@ -253,7 +253,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 			return; // silently return
 		}
 
-		parameters.setParameter("set-status", "REQUEST");
+		// parameters.setParameter("set-status", "REQUEST");
 		ParametersParameterComponent param = parameters.addParameter();
 		param.setName("lab-results");
 		param.setResource(myBundle);
