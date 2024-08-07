@@ -83,11 +83,11 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		if (theMessage.getVersion().equalsIgnoreCase("2.3") == true) {
 			LOGGER.info("Message Received with v2.3. Setting a parser for FHIR R4");
 			setMyParser((v) new HL7v23FhirR4Parser());
-		} if (theMessage.getVersion().equalsIgnoreCase("2.5.1") == true) {
+		} else if (theMessage.getVersion().equalsIgnoreCase("2.5.1") == true) {
 			LOGGER.info("Message Received with v2.5.1. Setting a parser for FHIR R4");
 			setMyParser((v) new HL7v251FhirR4Parser());
 		} else {
-			LOGGER.info("Message Received, but is not v2.3. Received message version is " + theMessage.getVersion());
+			LOGGER.info("Message Received, but is not either v2.3 or v2.5.1. Received message version is " + theMessage.getVersion());
 			return false;
 		}
 
