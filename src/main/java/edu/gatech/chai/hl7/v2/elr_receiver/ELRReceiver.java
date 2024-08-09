@@ -66,11 +66,6 @@ public class ELRReceiver {
 		String authBearer = default_authBearer;
 		String filePath = default_filePath;
 	
-		String env_fhir_controller_api_url = System.getenv("FHIR_CONTROLLER_API_URL");
-		if (env_fhir_controller_api_url != null && !env_fhir_controller_api_url.isBlank()) {
-			default_fhir_controller_api_url = env_fhir_controller_api_url;
-		}
-
 		String env_saveToFile = System.getenv("SAVE_TO_FILE");
 		if (env_saveToFile != null && !env_saveToFile.isBlank()) {
 			default_saveToFile = env_saveToFile;
@@ -126,7 +121,7 @@ public class ELRReceiver {
 			}
 		}
 
-		String envFhirUrl = System.getenv("FHIR_URL");
+		String envFhirUrl = System.getenv("FHIR_CONTROLLER_API_URL");
 		if (envFhirUrl != null && !envFhirUrl.isEmpty()) {
 			if (!envFhirUrl.startsWith("http://") && !envFhirUrl.startsWith("https://")) {
 				envFhirUrl = "http://"+envFhirUrl;
