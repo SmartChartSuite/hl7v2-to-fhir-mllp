@@ -14,7 +14,7 @@
 	<properties>
 		<hapi_v2_stable_version>2.5.1</hapi_v2_stable_version>
 		<hapi_fhir_stable_version>7.0.0</hapi_fhir_stable_version>
-		<hl7v2_to_fhir_version>1.2.0</hl7v2_to_fhir_version>
+		<hl7v2_to_fhir_version>1.2.1</hl7v2_to_fhir_version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<repositories>
