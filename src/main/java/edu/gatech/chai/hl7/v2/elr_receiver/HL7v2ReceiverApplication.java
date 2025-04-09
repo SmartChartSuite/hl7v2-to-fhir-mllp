@@ -7,6 +7,7 @@ import java.util.TimerTask;
 
 import org.hl7.fhir.r4.model.Bundle;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +40,7 @@ public abstract class HL7v2ReceiverApplication<v extends BaseHL7v2FHIRParser>
 	private String authBasic = null;
 	private String authBearer = null;
 	private String filePath =  null;
+	private JSONObject v2Filters = null;
 
 	// Logger setup
 	final static Logger LOGGER = LoggerFactory.getLogger(HL7v2ReceiverApplication.class.getName());
@@ -85,6 +87,14 @@ public abstract class HL7v2ReceiverApplication<v extends BaseHL7v2FHIRParser>
 
 	public String getFilePath() {
 		return filePath;
+	}
+
+	public JSONObject getV2Filters() {
+		return v2Filters;
+	}
+
+	public void setV2Filters(JSONObject v2Filters) {
+		this.v2Filters = v2Filters;
 	}
 
 	public void config(

@@ -1,0 +1,23 @@
+{
+  "version": "0.0.1",
+  "filters": [
+    {
+      "conjunction": "or",
+      "segment_loc": "OBX-3",
+      "segment_value_type": "CE",
+      "segment_value": "123042232^RPR(QUAL)-SERUM^",
+      "value_loc": "OBX-5",
+      "value_type": "ST",
+      "value_value": "Reactive"
+    },
+    {
+      "conjunction": "or",
+      "segment_loc": "OBX-3",
+      "segment_value_type": "CE",
+      "segment_value": "123042230^RPR TITER-SERUM^",
+      "value_loc": "OBX-5",
+      "value_type": "SN",
+      "value_value": ">^1^:^1"
+    }
+  ]
+}

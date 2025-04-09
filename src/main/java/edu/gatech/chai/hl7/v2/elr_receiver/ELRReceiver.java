@@ -2,13 +2,18 @@ package edu.gatech.chai.hl7.v2.elr_receiver;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.Properties;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,6 +54,7 @@ public class ELRReceiver {
 	static String default_authBasic = "client:secret";
 	static String default_authBearer = "1234";
 	static String default_filePath = "./";
+	static String default_v2FilterFile = "filter_configuration.json";
 
 	@SuppressWarnings("rawtypes")
 	public static void main(String[] args) throws Exception {
@@ -65,6 +71,7 @@ public class ELRReceiver {
 		String authBasic = default_authBasic;
 		String authBearer = default_authBearer;
 		String filePath = default_filePath;
+		String v2FilterFile = default_v2FilterFile;
 	
 		String env_saveToFile = System.getenv("SAVE_TO_FILE");
 		if (env_saveToFile != null && !env_saveToFile.isBlank()) {
@@ -95,6 +102,7 @@ public class ELRReceiver {
 			authBasic = prop.getProperty("authBasic", default_authBasic);
 			authBearer = prop.getProperty("authBearer", default_authBearer);
 			filePath = prop.getProperty("filePath", default_filePath);
+			v2FilterFile = prop.getProperty("v2FilterFile", default_v2FilterFile);
 
 			if (prop.getProperty("useTls", default_useTls_str).equalsIgnoreCase("true")) {
 				useTls = true;
@@ -117,6 +125,7 @@ public class ELRReceiver {
 				prop.setProperty("authBasic", default_hl7HttpBasic);
 				prop.setProperty("authBearer", default_authBearer);
 				prop.setProperty("filePath", default_filePath);
+				prop.setProperty("v2FilterFile", default_v2FilterFile);
 				prop.store(output, null);
 			}
 		}
@@ -140,13 +149,19 @@ public class ELRReceiver {
 			transport = envTransport;
 		}
 
+		// Read v2 filters and set it up.
+		String filtersstr = Files.readString(Path.of(v2FilterFile));
+		JSONObject filtersJson = new JSONObject(filtersstr);
+
+		HL7v2ReceiverFHIRApplication handler = new HL7v2ReceiverFHIRApplication();
+		handler.setV2Filters(filtersJson);
+		
 		if ("MLLP".equals(transport)) {
 			HapiContext ctx = new DefaultHapiContext();
 			LOGGER.debug("Starting with MLLP");
 			HL7Service server = ctx.newServer(port, useTls);
 
 			LOGGER.debug("Preparing for FHIR parser");
-			HL7v2ReceiverFHIRApplication handler = new HL7v2ReceiverFHIRApplication();
 			server.registerApplication("*", "*", (ReceivingApplication<Message>) handler);
 
 			// Configure the Receiver App before we start.
@@ -166,7 +181,6 @@ public class ELRReceiver {
 			SimpleServer server = new SimpleServer(port, llp, parser);
 			server.setExceptionHandler(new MyExceptionHandler());
 
-			HL7v2ReceiverFHIRApplication handler = new HL7v2ReceiverFHIRApplication();
 			((Hl7OverHttpLowerLayerProtocol) llp).setAuthorizationCallback(handler);
 
 			server.registerApplication("*", "*", (ReceivingApplication<Message>) handler);
