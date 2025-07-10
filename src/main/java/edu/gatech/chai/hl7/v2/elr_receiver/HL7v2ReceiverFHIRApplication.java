@@ -97,7 +97,8 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 			LOGGER.info("Message Received with v2.5.1. Setting a parser for FHIR R4");
 			setMyParser((v) new HL7v251FhirR4Parser());
 		} else {
-			LOGGER.info("Message Received, but is not either v2.3 or v2.5.1. Received message version is " + theMessage.getVersion());
+			LOGGER.info("Message Received, but is not either v2.3 or v2.5.1. Received message version is "
+					+ theMessage.getVersion());
 			return false;
 		}
 
@@ -124,7 +125,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		return true;
 	}
 
-	private Bundle makeTransactionFromMessage (Bundle bundle) {
+	private Bundle makeTransactionFromMessage(Bundle bundle) {
 		// Write transaction
 		Bundle transactionBundle = (Bundle) bundle;
 		transactionBundle.setType(BundleType.TRANSACTION);
@@ -137,7 +138,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 			entryRequest.setMethod(HTTPVerb.POST);
 			entryRequest.setUrl(resourceTypeString);
 		}
-		
+
 		return transactionBundle;
 	}
 
@@ -154,154 +155,170 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 			e.printStackTrace();
 		}
 
-//			System.out.println(fhirJsonObject.toString());
-//			also need it to save to a file
+		// System.out.println(fhirJsonObject.toString());
+		// also need it to save to a file
 	}
 
 	public Message processMessage(Message theMessage, Map<String, Object> theMetadata)
 			throws ReceivingApplicationException, HL7Exception {
 
 		LOGGER.debug("Received message:\n" + theMessage.encode());
-		
+
 		// Apply filter.
 		JSONObject myFilters = getV2Filters();
 
 		// If filters are not set, then we just silently ignore incoming message.
 		if (myFilters != null && "0.0.1".equals(myFilters.getString("version"))) {
 			boolean ok2accept = false;
-			for (Object myObject : myFilters.getJSONArray("filters")) {
-				JSONObject myFilter = (JSONObject) myObject;
 
-				String conj = myFilter.getString("conjunction");
-				String segmentLoc = myFilter.getString("segment_loc");
-				String segmentValue = myFilter.getString("segment_value");
-				String valueLoc = myFilter.getString("value_loc");
-				String valueType = myFilter.getString("value_type");
-				String valueValue = myFilter.getString("value_value");
+			if (myFilters.has("status") && "allow_all".equalsIgnoreCase(myFilters.getString("status"))) {
+				ok2accept = true;
+			} else {
+				for (Object myObject : myFilters.getJSONArray("filters")) {
+					JSONObject myFilter = (JSONObject) myObject;
 
-				ca.uhn.hl7v2.model.v23.message.ORU_R01 oruR01Message = (ca.uhn.hl7v2.model.v23.message.ORU_R01) theMessage;
-				String[] segment_info = segmentLoc.split("-");
-				if ("OBX".equals(segment_info[0])) {
-					if ("3".equals(segment_info[1])) {
-						String[] segment_values = segmentValue.split("\\^");
+					String conj = myFilter.getString("conjunction");
+					String segmentLoc = myFilter.getString("segment_loc");
+					String segmentValue = myFilter.getString("segment_value");
+					String valueLoc = myFilter.getString("value_loc");
+					String valueType = myFilter.getString("value_type");
+					String valueValue = myFilter.getString("value_value");
 
-						String segment_v_id = "";
-						String segment_v_text = "";
-						String segment_v_system = "";
-						if (segment_values.length >= 3) {
-							segment_v_id = segment_values[0];
-							segment_v_text = segment_values[1];
-							segment_v_system = segment_values[2];
-						} else if (segment_values.length >= 2) {
-							segment_v_id = segment_values[0];
-							segment_v_text = segment_values[1];
-						} else {
-							continue;
-						}
-						
-						if (segment_v_id.isBlank()&& segment_v_text.isBlank()) {
-							continue;
-						}
-		
-						for (ORU_R01_RESPONSE resp : oruR01Message.getRESPONSEAll()) {
-							if (resp != null && !resp.isEmpty()) {
-								for (ORU_R01_ORDER_OBSERVATION orderObs : resp.getORDER_OBSERVATIONAll()) {
-									for (ORU_R01_OBSERVATION obs : orderObs.getOBSERVATIONAll()) {
-										OBX obx = obs.getOBX();
-										CE obxIdentifier = obx.getObservationIdentifier();
-										String obxSegId = obxIdentifier.getCe1_Identifier().getValue();
-										String obxSegText = obxIdentifier.getCe2_Text().getValue();
-										String obxSegSystem = obxIdentifier.getCe3_NameOfCodingSystem().getValue();
-										if (!segment_v_id.isBlank() && segment_v_id.equals(obxSegId)) {
-											if (!segment_v_text.isBlank() && segment_v_text.equals(obxSegText)) {
-												if (segment_v_system.isBlank()) {
-													ok2accept = true;
-												} else if (!segment_v_system.isBlank() && segment_v_system.equals(obxSegSystem)) {
-													ok2accept = true;
+					ca.uhn.hl7v2.model.v23.message.ORU_R01 oruR01Message = (ca.uhn.hl7v2.model.v23.message.ORU_R01) theMessage;
+					String[] segment_info = segmentLoc.split("-");
+					if ("OBX".equals(segment_info[0])) {
+						if ("3".equals(segment_info[1])) {
+							String[] segment_values = segmentValue.split("\\^");
+
+							String segment_v_id = "";
+							String segment_v_text = "";
+							String segment_v_system = "";
+							if (segment_values.length >= 3) {
+								segment_v_id = segment_values[0];
+								segment_v_text = segment_values[1];
+								segment_v_system = segment_values[2];
+							} else if (segment_values.length >= 2) {
+								segment_v_id = segment_values[0];
+								segment_v_text = segment_values[1];
+							} else {
+								continue;
+							}
+
+							if (segment_v_id.isBlank() && segment_v_text.isBlank()) {
+								continue;
+							}
+
+							for (ORU_R01_RESPONSE resp : oruR01Message.getRESPONSEAll()) {
+								if (resp != null && !resp.isEmpty()) {
+									for (ORU_R01_ORDER_OBSERVATION orderObs : resp.getORDER_OBSERVATIONAll()) {
+										for (ORU_R01_OBSERVATION obs : orderObs.getOBSERVATIONAll()) {
+											OBX obx = obs.getOBX();
+											CE obxIdentifier = obx.getObservationIdentifier();
+											String obxSegId = obxIdentifier.getCe1_Identifier().getValue();
+											String obxSegText = obxIdentifier.getCe2_Text().getValue();
+											String obxSegSystem = obxIdentifier.getCe3_NameOfCodingSystem().getValue();
+											if (!segment_v_id.isBlank() && segment_v_id.equals(obxSegId)) {
+												if (!segment_v_text.isBlank() && segment_v_text.equals(obxSegText)) {
+													if (segment_v_system.isBlank()) {
+														ok2accept = true;
+													} else if (!segment_v_system.isBlank()
+															&& segment_v_system.equals(obxSegSystem)) {
+														ok2accept = true;
+													}
 												}
 											}
-										}
 
-										if (ok2accept) {
-											// check the value for this OBX type.
-											ok2accept = false;
-											String[] value_info = valueLoc.split("-");
-											if ("OBX".equals(value_info[0]) && "5".equals(value_info[1])) {
-												for (Varies value : obx.getObx5_ObservationValue()) {
-													Type obx5Value = value.getData();
-													if (obx5Value != null && !obx5Value.isEmpty()) {														
-														if ("ST".equals(valueType)) {
-															ST obx5ValueSt = (ST) obx5Value;
-															if (valueValue.equalsIgnoreCase(obx5ValueSt.getValue())) {
-																ok2accept = true;
-																break;
-															}
-														} else if ("SN".equals(valueType)) {
-															//comparator^num1^:^num2
-															SN obx5valueSn = (SN) obx5Value;
-															ST obx5valueComparator = obx5valueSn.getComparator();
-															String[] values = valueValue.split("\\^");
-															if (values.length != 4) {
-																continue;
-															}
-
-															String filterValueComparator = values[0];
-															String filterValueNum1 = values[1];
-															String filterValueNum2 = values[3];
-
-															double filterValue = Double.valueOf(filterValueNum2)/Double.valueOf(filterValueNum1);
-															double obxValue = Double.valueOf(obx5valueSn.getNum2().getValue())/Double.valueOf(obx5valueSn.getNum1().getValue());
-
-															if (filterValueComparator != null && ("<".equals(filterValueComparator) || "<=".equals(filterValueComparator))) {
-																if (obxValue <= filterValue) {
+											if (ok2accept) {
+												// check the value for this OBX type.
+												ok2accept = false;
+												String[] value_info = valueLoc.split("-");
+												if ("OBX".equals(value_info[0]) && "5".equals(value_info[1])) {
+													for (Varies value : obx.getObx5_ObservationValue()) {
+														Type obx5Value = value.getData();
+														if (obx5Value != null && !obx5Value.isEmpty()) {
+															if ("ST".equals(valueType)) {
+																ST obx5ValueSt = (ST) obx5Value;
+																if (valueValue
+																		.equalsIgnoreCase(obx5ValueSt.getValue())) {
 																	ok2accept = true;
 																	break;
 																}
-															} else if (filterValueComparator != null && (">".equals(filterValueComparator) || ">=".equals(filterValueComparator))) {
-																if (obxValue >= filterValue) {
-																	ok2accept = true;
-																	break;
+															} else if ("SN".equals(valueType)) {
+																// comparator^num1^:^num2
+																SN obx5valueSn = (SN) obx5Value;
+																ST obx5valueComparator = obx5valueSn.getComparator();
+																String[] values = valueValue.split("\\^");
+																if (values.length != 4) {
+																	continue;
 																}
-															} else {
-																if (obxValue == filterValue) {
-																	ok2accept = true;
-																	break;
+
+																String filterValueComparator = values[0];
+																String filterValueNum1 = values[1];
+																String filterValueNum2 = values[3];
+
+																double filterValue = Double.valueOf(filterValueNum2)
+																		/ Double.valueOf(filterValueNum1);
+																double obxValue = Double
+																		.valueOf(obx5valueSn.getNum2().getValue())
+																		/ Double.valueOf(
+																				obx5valueSn.getNum1().getValue());
+
+																if (filterValueComparator != null
+																		&& ("<".equals(filterValueComparator) || "<="
+																				.equals(filterValueComparator))) {
+																	if (obxValue <= filterValue) {
+																		ok2accept = true;
+																		break;
+																	}
+																} else if (filterValueComparator != null
+																		&& (">".equals(filterValueComparator) || ">="
+																				.equals(filterValueComparator))) {
+																	if (obxValue >= filterValue) {
+																		ok2accept = true;
+																		break;
+																	}
+																} else {
+																	if (obxValue == filterValue) {
+																		ok2accept = true;
+																		break;
+																	}
 																}
 															}
 														}
 													}
-												}
 
-												if (ok2accept) {
-													// This message is OK. 
-													break;
+													if (ok2accept) {
+														// This message is OK.
+														break;
+													}
 												}
+												ok2accept = false;
 											}
-											ok2accept = false;
+										}
+										if (ok2accept) {
+											// we do not need to review the rest of OBSERVATION.
+											break;
 										}
 									}
 									if (ok2accept) {
-										// we do not need to review the rest of OBSERVATION.
 										break;
 									}
-								}
-								if (ok2accept) {
-									break;
 								}
 							}
 						}
 					}
-				}
-				if ("and".equalsIgnoreCase(conj) && ok2accept == false) {
-					// it's "and" but we have ok2accept == false. We stop evaluating rest as it will be
-					// false no matter what we have in the rest of filters.
-					break;
-				}
+					if ("and".equalsIgnoreCase(conj) && ok2accept == false) {
+						// it's "and" but we have ok2accept == false. We stop evaluating rest as it will
+						// be
+						// false no matter what we have in the rest of filters.
+						break;
+					}
 
-				if (ok2accept && "or".equalsIgnoreCase(conj)) {
-					break;
+					if (ok2accept && "or".equalsIgnoreCase(conj)) {
+						break;
+					}
 				}
-			}
+			} 
 
 			if (ok2accept) {
 				List<IBaseBundle> bundles = getMyParser().executeParser(theMessage);
@@ -316,8 +333,10 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 				}
 
 				for (IBaseBundle bundle : bundles) {
-					// this bundle is message bundle. Strip off the message wrapper and use the focused bundle.
-					if (((Bundle) bundle).getType() != Bundle.BundleType.MESSAGE) continue;
+					// this bundle is message bundle. Strip off the message wrapper and use the
+					// focused bundle.
+					if (((Bundle) bundle).getType() != Bundle.BundleType.MESSAGE)
+						continue;
 
 					BundleEntryComponent messageHeaderEntry = ((Bundle) bundle).getEntryFirstRep();
 					MessageHeader mh = (MessageHeader) messageHeaderEntry.getResource();
@@ -325,8 +344,8 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 
 					Bundle documentBundle = null;
 					for (BundleEntryComponent entry : ((Bundle) bundle).getEntry()) {
-						if (focusReference.getReference() != null && 
-							focusReference.getReference().equals(entry.getFullUrl())) {
+						if (focusReference.getReference() != null &&
+								focusReference.getReference().equals(entry.getFullUrl())) {
 							if (entry.getResource() instanceof Bundle) {
 								documentBundle = (Bundle) entry.getResource();
 								break;
@@ -334,7 +353,8 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 						}
 					}
 
-					if (documentBundle == null) continue;
+					if (documentBundle == null)
+						continue;
 					// bundle = makeTransactionFromMessage((Bundle)bundle);
 
 					// change it to transaction bundle.
@@ -356,8 +376,8 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		}
 
 		/*
-		* Now reply to the message
-		*/
+		 * Now reply to the message
+		 */
 		Message response;
 		try {
 			response = theMessage.generateACK();
@@ -369,7 +389,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 	}
 
 	private void sendFhir(IBaseBundle bundle, IGenericClient client)
-				throws ReceivingApplicationException, HL7Exception, IOException {
+			throws ReceivingApplicationException, HL7Exception, IOException {
 
 		// Create Parameters and add the bundle.
 		// First, find a patient.
@@ -390,7 +410,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 							} else if ("SS".equals(coding.getCode())) {
 								SSN = identifier.getValue();
 							}
-						}					
+						}
 					}
 
 					patientIdValue = identifier.getValue();
@@ -414,24 +434,24 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		ParametersParameterComponent param = parameters.addParameter();
 		param.setName("lab-results");
 		param.setResource(myBundle);
-		
+
 		String fileUnique = String.valueOf(System.currentTimeMillis());
-		if ("YES".equalsIgnoreCase(getSaveToFile())) {					
+		if ("YES".equalsIgnoreCase(getSaveToFile())) {
 			String filename = getFilePath() + "/" + fileUnique + "_bundle.txt";
 			saveJsonToFile(parameters, filename);
-		} 
-	
+		}
+
 		Parameters retParams;
 		try {
 			retParams = client.operation()
-				.onServer()
-				.named("$registry-control")
-				.withParameters(parameters)
-				.execute();
+					.onServer()
+					.named("$registry-control")
+					.withParameters(parameters)
+					.execute();
 		} catch (UnprocessableEntityException e) {
 			String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(myBundle);
 			getQueueFile().add(fhirJson.getBytes());
-			
+
 			OperationOutcome oo = (OperationOutcome) e.getOperationOutcome();
 			String ooIssueText = "";
 			for (OperationOutcomeIssueComponent issue : oo.getIssue()) {
@@ -447,7 +467,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 		} catch (Exception e) {
 			String fhirJson = ctx.newJsonParser().setPrettyPrint(true).encodeResourceToString(myBundle);
 			getQueueFile().add(fhirJson.getBytes());
-			
+
 			throw new ReceivingApplicationException(e);
 		}
 	}
@@ -465,7 +485,7 @@ public class HL7v2ReceiverFHIRApplication<v extends BaseHL7v2FHIRParser> extends
 					client.registerInterceptor(new BearerTokenAuthInterceptor(getAuthBearer()));
 				}
 			}
-	
+
 			sendFhir(myBundle, client);
 		} catch (Exception e) {
 			e.printStackTrace();
